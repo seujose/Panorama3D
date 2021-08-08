@@ -5,9 +5,9 @@ module.exports = {
   mode: 'development',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
-    compress: true,
-    open: true, 
-    writeToDisk:true
+    compress: false,
+    open: false, 
+    writeToDisk:false
   },
   plugins: [
     //  new BundleAnalyzerPlugin(),
