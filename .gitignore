@@ -1,6 +1,6 @@
 node_modules/
 dist/assets/
 dist/main.js
-dist/*hot
+dist/*hot*
 dist/main.js.map
 debug.log
