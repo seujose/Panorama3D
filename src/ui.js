@@ -1,9 +1,6 @@
 "use strict";
 import { canvas, scene, rootStand, assetsPath, engine } from "./main.js";
 import { camera, moveCameraTo } from "./camera";
-//import { Button, DisplayGrid, Grid,  } from "@babylonjs/gui/2D";
-
-
 import { Tags } from "@babylonjs/core/Misc/tags";
 import { AdvancedTexture } from "@babylonjs/gui/2D";
 import { Scalar } from "@babylonjs/core/Maths/math.scalar";
@@ -13,19 +10,14 @@ import { Animations, CubicEase } from "@babylonjs/core/Animations";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { BackgroundMaterial } from "@babylonjs/core/Materials/Background/backgroundMaterial";
 import { advancedTexture } from "./main.js";
-import {Button,  Control,  Rectangle, TextBlock, Ellipse, Line } from "@babylonjs/gui/2D";
-//, Control, TextBlock, Container, MultiLine, Slider
-//import { Layer } from "@babylonjs/core/Layers";
-
-export let xAddPos = 0;
-export let yAddPos = 0;
-export let xAddRot = 0;
-export let yAddRot = 0;
-export let sideJoystickOffset = 150;
-export let bottomJoystickOffset = -50;
-//let advancedTexture = new AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-  
+import {
+  Button,
+  Control,
+  Rectangle,
+  TextBlock,
+  Ellipse,
+  Line,
+} from "@babylonjs/gui/2D";
 
 export function createSceneBtns(imgArray) {
   for (let i = 0; i < imgArray.length; i++) {
@@ -33,7 +25,7 @@ export function createSceneBtns(imgArray) {
     button.type = "button";
     button.style.fontSize = "32px";
     button.innerHTML = imgArray[i];
-    document.getElementById("controlsDiv").appendChild(button);
+    document.getElementById("controls").appendChild(button);
 
     button.onclick = function () {
       if (scene.getMeshByName(imgArray[i] + "_mesh")) {
@@ -63,38 +55,44 @@ export function createSceneBtns(imgArray) {
 }
 
 export function createHotSpot(mesh) {
-  
-  let rect1 = new  Rectangle();
+  let rect1 = new Rectangle();
   rect1.width = 0.2;
   rect1.height = "40px";
   rect1.cornerRadius = 20;
-  rect1.color = "Orange";
+  rect1.color = "white";
   rect1.thickness = 4;
-  rect1.background = "green";
+  rect1.background = "transparent";
   advancedTexture.addControl(rect1);
-  rect1.linkWithMesh(mesh);   
+  rect1.linkWithMesh(mesh);
   rect1.linkOffsetY = -150;
 
-  let label = new  TextBlock();
-  label.text = "Sphere";
+  let label = new TextBlock();
+  label.text = mesh.name;
   rect1.addControl(label);
 
   let target = new Ellipse();
   target.width = "40px";
   target.height = "40px";
-  target.color = "Orange";
+  target.color = "white";
   target.thickness = 4;
-  target.background = "green";
+  target.background = "transparent";
   advancedTexture.addControl(target);
-  target.linkWithMesh(mesh);   
+  target.linkWithMesh(mesh);
 
   let line = new Line();
   line.lineWidth = 4;
-  line.color = "Orange";
+  line.color = "white";
   line.y2 = 20;
   line.linkOffsetY = -20;
   advancedTexture.addControl(line);
-  line.linkWithMesh(mesh); 
-  line.connectedControl = rect1;  
+  line.linkWithMesh(mesh);
+  line.connectedControl = rect1;
+}
 
+export function createVideo(videoTextureArray, mesh) {
+  videoTextureArray.forEach((element) => {
+    mesh.material.diffuseTexture = new VideoTexture(element, element)
+    console.log(element);
+    
+  });
 }

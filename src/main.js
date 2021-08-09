@@ -1,7 +1,12 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import { Engine } from "@babylonjs/core/Engines/engine";
-import { Color4, Vector3 } from "@babylonjs/core/Maths/math";
+import {
+  Color3,
+  Color4,
+  Quaternion,
+  Vector3,
+} from "@babylonjs/core/Maths/math";
 import { Scene } from "@babylonjs/core/scene";
 import { createDome } from "./pano.js";
 import { arcCamera } from "./camera.js";
@@ -10,8 +15,10 @@ import { Material } from "@babylonjs/core/Materials/material";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { Helpers, PhotoDome } from "@babylonjs/core/Helpers";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
-import { createSceneBtns , createHotSpot} from "./ui.js";
+import { createSceneBtns, createHotSpot, createVideo } from "./ui.js";
 import { AdvancedDynamicTexture } from "@babylonjs/gui/2D/advancedDynamicTexture";
+import { Texture } from "@babylonjs/core/Materials/Textures/texture";
+import { VideoTexture } from "@babylonjs/core/Materials/Textures/videoTexture";
 
 export const engine = new Engine(canvas, true, {
   stencil: true,
@@ -19,50 +26,81 @@ export const engine = new Engine(canvas, true, {
   lockstepMaxSteps: 4,
 });
 export let scene = new Scene(engine);
-export const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI('babylonUI',true, scene);
+export const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
+  "babylonUI",
+  true,
+  scene
+);
 scene.gravity = new Vector3(0, -9.81, 0);
 scene.collisionsEnabled = true;
 scene.clearColor = new Color4(0, 0, 0, 0);
 scene.debugLayer.show();
 const imgArray = [
-  "/assets/base.png",
-  "/assets/balcao_0.png",
-  "/assets/puffs_0.png",
-  "/assets/sofa_0.png",
-  "/assets/sofa_1.png",
-  "/assets/sofa_2.png",
-  "/assets/mesaCentral_0.png",
-  "/assets/mesa_1.png",
-  "/assets/mesa_0.png",
-  "/assets/cadeira_1.png",
+  "/base.png",
+  "/balcao_0.png",
+  "/sofa_0.png",
+  "/sofa_1.png",
+  "/sofa_2.png",
+  "/puffs_0.png",
+  "/puffs_1.png",
+  "/puffs_2.png",
+  "/mesaCentral_0.png",
+  "/mesa_1.png",
+  "/mesa_0.png",
+  "/cadeira_1.png",
 ];
+const videoTextureArray = ["/dancer1.webm", "/video2.mp4", "/video3.mp4"];
 
 arcCamera();
 window.addEventListener(
   "load",
   function () {
-    /*  for (let index = 0; index < imgArray.length; index++) {
-      const element = imgArray[index];
-      const dome = new PhotoDome(
-        imgArray[index],
-        imgArray[index],
-        {
-          resolution: 64,
-          size: 1000,
-          //useDirectMapping:false,
-        },
-        scene
-      );
-      scene.getMaterialByID(
-        imgArray[index] + "_material"
-      ).diffuseTexture.hasAlpha = true;
-    }*/
     createSceneBtns(imgArray);
-    SceneLoader.Append("./assets/", "cena.gltf", scene, function (scene) {
-      scene.meshes.forEach(function(m){
-        createHotSpot(m);
+
+    SceneLoader.Append("./", "sceneMesh.glb", scene, function (scene) {
+      scene.meshes[0].scaling = new Vector3(100, 100, -100);
+      scene.meshes[0].position = new Vector3(0, -150, 0);
+      scene.meshes[0].rotationQuaternion = new Quaternion.RotationYawPitchRoll(
+        0,
+        0,
+        0
+      );
+      scene.transformNodes[1].getChildMeshes(false).forEach(function (m) {
+        if (!m.name.includes("videoWall")) {
+          createHotSpot(m);
+          m.visibility = 0;
+        } else {
+          let videoMat = new StandardMaterial(
+            m.name + "_videoMaterial",
+            scene
+          );
+          let videoTexture = new VideoTexture(
+            videoTextureArray[0],
+            videoTextureArray[0],
+            scene, false, true
+          );
+          //videoMat.emissiveTexture = videoTexture;
+          videoMat.opacityTexture = videoTexture;
+          //videoMat.disableLighting = true;
+          
+          videoTexture.video.muted = true;
+          videoTexture.video.play();
+          m.material = videoMat;
+
+          m.material.emissiveTexture = videoTexture;
+          //m.material.emissiveColor = new Color3(1, 1, 1);
+          //m.material.depthFunction = Engine.ALWAYS;
+        }
+        
       });
+      
     });
+    /* SceneLoader.Append("./", "sceneVideos.glb", scene, function (scene) {
+      scene.meshes.forEach(function (m) {
+        //createVideo(videoTextureArray, m);
+        console.log(m.name);
+      });
+    }); */
   },
   false
 );
