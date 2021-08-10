@@ -36,25 +36,22 @@ scene.collisionsEnabled = true;
 scene.clearColor = new Color4(0, 0, 0, 0);
 scene.debugLayer.show();
 const imgArray = [
-  "/base.png",
-  "/balcao_0.png",
+  "/cadeira.png",
+  "/mesa_central_0.png",
   "/sofa_0.png",
   "/sofa_1.png",
-  "/sofa_2.png",
-  "/puffs_0.png",
-  "/puffs_1.png",
-  "/puffs_2.png",
-  "/mesaCentral_0.png",
-  "/mesa_1.png",
-  "/mesa_0.png",
-  "/cadeira_1.png",
+  "/puff_0.png",
+  "/puff_1.png",
+  "/mesa.png",
+  "/comoda.png",
+  "/base.png",
 ];
 const videoTextureArray = ["/dancer1.webm", "/video2.mp4", "/video3.mp4"];
-
 arcCamera();
 window.addEventListener(
   "load",
   function () {
+    imgArray.reverse(); //obedece ordem dos layer do Photoshop
     createSceneBtns(imgArray);
 
     SceneLoader.Append("./", "sceneMesh.glb", scene, function (scene) {
@@ -70,37 +67,22 @@ window.addEventListener(
           createHotSpot(m);
           m.visibility = 0;
         } else {
-          let videoMat = new StandardMaterial(
-            m.name + "_videoMaterial",
-            scene
-          );
+          let videoMat = new StandardMaterial(m.name + "_videoMaterial", scene);
           let videoTexture = new VideoTexture(
             videoTextureArray[0],
             videoTextureArray[0],
-            scene, false, true
+            scene,
+            false,
+            true
           );
-          //videoMat.emissiveTexture = videoTexture;
           videoMat.opacityTexture = videoTexture;
-          //videoMat.disableLighting = true;
-          
           videoTexture.video.muted = true;
           videoTexture.video.play();
           m.material = videoMat;
-
           m.material.emissiveTexture = videoTexture;
-          //m.material.emissiveColor = new Color3(1, 1, 1);
-          //m.material.depthFunction = Engine.ALWAYS;
         }
-        
       });
-      
     });
-    /* SceneLoader.Append("./", "sceneVideos.glb", scene, function (scene) {
-      scene.meshes.forEach(function (m) {
-        //createVideo(videoTextureArray, m);
-        console.log(m.name);
-      });
-    }); */
   },
   false
 );

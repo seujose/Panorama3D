@@ -26,21 +26,25 @@ export function createSceneBtns(imgArray) {
     button.style.fontSize = "32px";
     button.innerHTML = imgArray[i];
     document.getElementById("controls").appendChild(button);
-
     button.onclick = function () {
-      if (scene.getMeshByName(imgArray[i] + "_mesh")) {
-        scene.getMeshByName(imgArray[i] + "_mesh").parent.dispose(false);
+      //se node ja existe, destruir
+      if (condition) {
+        
+      }
+      if (scene.getMeshByName(imgArray[i] + "_mesh")) { 
+        scene.getMeshByName(imgArray[i] + "_mesh").parent.dispose(false); 
       } else {
+        //criar nodes
         const dome = new PhotoDome(
           imgArray[i],
           imgArray[i],
           {
             resolution: 64,
             size: 1000,
-            //useDirectMapping:false,
           },
           scene
         );
+        dome.mesh.alphaIndex = i;//define ordem de remderizacao
         Tags.AddTagsTo(dome, "dome");
         scene.getMaterialByID(
           imgArray[i] + "_material"
