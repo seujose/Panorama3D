@@ -28,9 +28,6 @@ export function createSceneBtns(imgArray) {
     document.getElementById("controls").appendChild(button);
     button.onclick = function () {
       //se node ja existe, destruir
-      if (condition) {
-        
-      }
       if (scene.getMeshByName(imgArray[i] + "_mesh")) { 
         scene.getMeshByName(imgArray[i] + "_mesh").parent.dispose(false); 
       } else {
