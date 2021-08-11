@@ -9,7 +9,8 @@ import {
 } from "@babylonjs/core/Maths/math";
 import { Scene } from "@babylonjs/core/scene";
 import { createDome } from "./pano.js";
-import { arcCamera } from "./camera.js";
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import { UniversalCamera } from "@babylonjs/core/Cameras/universalCamera";
 export const canvas = document.getElementById("renderCanvas");
 import { Material } from "@babylonjs/core/Materials/material";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
@@ -31,10 +32,16 @@ export const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
   true,
   scene
 );
+export let furniture = [];
+export const camera = new UniversalCamera("camera", new Vector3.Zero(), scene);
+camera.attachControl(canvas, true);
+//camera.inputs.attached.mousewheel.detachControl(canvas);
+scene.activeCamera = camera;
+
 scene.gravity = new Vector3(0, -9.81, 0);
 scene.collisionsEnabled = true;
 scene.clearColor = new Color4(0, 0, 0, 0);
-scene.debugLayer.show();
+//scene.debugLayer.show();
 const imgArray = [
   "/cadeira.png",
   "/mesa_central.png",
@@ -46,7 +53,7 @@ const imgArray = [
   "/base.png",
 ];
 const videoTextureArray = ["/dancer1.webm", "/video2.mp4", "/video3.mp4"];
-arcCamera();
+//arcCamera();
 window.addEventListener(
   "load",
   function () {
@@ -54,6 +61,7 @@ window.addEventListener(
     createSceneBtns(imgArray);
 
     SceneLoader.Append("./", "sceneMesh.glb", scene, function (scene) {
+      furniture = scene.meshes;
       scene.meshes[0].scaling = new Vector3(100, 100, -100);
       scene.meshes[0].position = new Vector3(0, -150, 0);
       scene.meshes[0].rotationQuaternion = new Quaternion.RotationYawPitchRoll(

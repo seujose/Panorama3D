@@ -1,6 +1,13 @@
 "use strict";
-import { canvas, scene, rootStand, assetsPath, engine } from "./main.js";
-import { camera, moveCameraTo } from "./camera";
+import {
+  canvas,
+  scene,
+  rootStand,
+  assetsPath,
+  engine,
+  furniture,
+} from "./main.js";
+import { lookAt } from "./camera";
 import { Tags } from "@babylonjs/core/Misc/tags";
 import { AdvancedTexture } from "@babylonjs/gui/2D";
 import { Scalar } from "@babylonjs/core/Maths/math.scalar";
@@ -9,7 +16,8 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { Animations, CubicEase } from "@babylonjs/core/Animations";
 import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
 import { BackgroundMaterial } from "@babylonjs/core/Materials/Background/backgroundMaterial";
-import { advancedTexture } from "./main.js";
+import { camera, advancedTexture } from "./main.js";
+
 import {
   Button,
   Control,
@@ -42,11 +50,9 @@ export function createSceneBtns(imgArray) {
         let waitfadeOutHotSpot = setTimeout(() => {
           scene.getMeshByName(button.innerHTML + "_mesh").parent.dispose(false);
         }, 100);
-
-        /* scene.getMeshByName(this.innerHTML + "_mesh").parent.dispose(false);
-        removeUIControl(this.innerHTML); */
       } else {
         //criar nodes e UI flutuante
+
         const dome = new PhotoDome(
           this.innerHTML,
           imgArray[i],
@@ -56,23 +62,36 @@ export function createSceneBtns(imgArray) {
           },
           scene
         );
+
         dome.mesh.alphaIndex = i; //define ordem de renderizacao
         Tags.AddTagsTo(dome, "dome");
         let domeMat = scene.getMaterialByID(this.innerHTML + "_material");
         domeMat.diffuseTexture.hasAlpha = true;
         domeMat.alpha = 0;
-         scene.registerBeforeRender(function domeAlphaIn() {
+        //fade in do domo criado
+
+        scene.registerBeforeRender(function domeAlphaIn() {
           if (domeMat.alpha < 1) {
             domeMat.alpha = Scalar.Lerp(domeMat.alpha, 1, 0.05);
           } else {
             scene.unregisterBeforeRender(domeAlphaIn);
           }
-        }); 
+        });
         let waitCreateHotSpot = setTimeout(() => {
           createHotSpot(this.innerHTML);
         }, 100);
-        
+        furniture.forEach(function f(element) {
+          if (element.name == button.innerHTML) {
+            let finalPos = new Vector3(
+              element.position.x,
+              element.position.y,
+              element.position.z * -1
+            );
+            lookAt(finalPos);
+          }
+        });
       }
+
       scene.getTransformNodesByTags("dome", function (m) {
         m.rotation = new Vector3(0, 0, 0);
         m.position = new Vector3(0, 0, 0);
@@ -86,7 +105,7 @@ function fadeOutHotSpot(ctrlName) {
       scene.registerBeforeRender(function removingCtrls() {
         if (ctrl.alpha > 0) {
           ctrl.alpha = Scalar.MoveTowards(ctrl.alpha, 0, 0.1);
-          console.log(ctrl.alpha);
+          //console.log(ctrl.alpha);
         } else {
           advancedTexture.removeControl(ctrl);
           scene.unregisterBeforeRender(removingCtrls);
@@ -132,7 +151,7 @@ export function createHotSpot(meshToFind) {
       line.linkWithMesh(m);
       line.connectedControl = rect1;
 
-       scene.registerBeforeRender(function alphaInterpolation() {
+      scene.registerBeforeRender(function alphaInterpolation() {
         if (alpha < 1) {
           alpha = Scalar.MoveTowards(alpha, 1, 0.03);
           rect1.alpha = alpha;
@@ -142,7 +161,7 @@ export function createHotSpot(meshToFind) {
         } else {
           scene.unregisterBeforeRender(alphaInterpolation);
         }
-      }); 
+      });
     }
   });
 }
@@ -150,6 +169,6 @@ export function createHotSpot(meshToFind) {
 export function createVideo(videoTextureArray, mesh) {
   videoTextureArray.forEach((element) => {
     mesh.material.diffuseTexture = new VideoTexture(element, element);
-    console.log(element);
+    //console.log(element);
   });
 }
