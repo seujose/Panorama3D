@@ -37,13 +37,12 @@ scene.clearColor = new Color4(0, 0, 0, 0);
 scene.debugLayer.show();
 const imgArray = [
   "/cadeira.png",
-  "/mesa_central_0.png",
+  "/mesa_central.png",
   "/sofa_0.png",
   "/sofa_1.png",
   "/puff_0.png",
-  "/puff_1.png",
-  "/mesa.png",
-  "/comoda.png",
+  "/mesa_cadeiras.png",
+  "/aparador.png",
   "/base.png",
 ];
 const videoTextureArray = ["/dancer1.webm", "/video2.mp4", "/video3.mp4"];
@@ -64,7 +63,7 @@ window.addEventListener(
       );
       scene.transformNodes[1].getChildMeshes(false).forEach(function (m) {
         if (!m.name.includes("videoWall")) {
-          createHotSpot(m);
+          //createHotSpot(m);
           m.visibility = 0;
         } else {
           let videoMat = new StandardMaterial(m.name + "_videoMaterial", scene);

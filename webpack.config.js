@@ -7,7 +7,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'dist'),
     compress: false,
     open: false, 
-    writeToDisk:false
+    writeToDisk:false, 
   },
   plugins: [
     //  new BundleAnalyzerPlugin(),
