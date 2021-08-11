@@ -52,7 +52,7 @@ const imgArray = [
   "/aparador.png",
   "/base.png",
 ];
-const videoTextureArray = ["/dancer1.webm", "/video2.mp4", "/video3.mp4"];
+const videoTextureArray = ["/video_0.webm", "/video2.mp4", "/video3.mp4"];
 //arcCamera();
 window.addEventListener(
   "load",
