@@ -118,7 +118,10 @@ export function createHotSpot(meshToFind) {
   scene.meshes.forEach(function (m) {
     let alpha = 0;
     if (m.name == meshToFind) {
+   
+
       let rect1 = new Rectangle(m.name);
+      rect1.isPointerBlocker=true;
       rect1.width = 0.2;
       rect1.height = "40px";
       rect1.cornerRadius = 20;
@@ -128,9 +131,31 @@ export function createHotSpot(meshToFind) {
       advancedTexture.addControl(rect1);
       rect1.linkWithMesh(m);
       rect1.linkOffsetY = -150;
+      rect1.onPointerClickObservable.add(()=>{
+        /**
+         * alternar entre as variacoes disponiveis para este movel
+         * 1 - remover domo original e criar novo com nova textura ou 
+         * apenas trocar textura no domo atual
+         * 2 - atualizar texto do label
+         * 3 - 
+         */
+
+        
+      })
+      
+  /*     let btn = new Button(m.name);
+      btn.width = 0.2
+      btn.height='40px'
+      //btn.linkWithMesh(m)
+      rect1.addControl(btn);
+      btn.onPointerClickObservable.add(()=>{
+        console.log('teste');
+      }) */
+     
 
       let label = new TextBlock(m.name);
       label.text = m.name;
+      label.isPointerBlocker=false;
       rect1.addControl(label);
 
       let target = new Ellipse(m.name);

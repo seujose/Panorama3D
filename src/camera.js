@@ -13,7 +13,7 @@ export function lookAt(targetPosition) {
         camera.setTarget(v);
       }
     });
-  }, 50);
+  }, 100);
 }
 
  

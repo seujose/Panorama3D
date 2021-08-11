@@ -41,7 +41,7 @@ scene.activeCamera = camera;
 scene.gravity = new Vector3(0, -9.81, 0);
 scene.collisionsEnabled = true;
 scene.clearColor = new Color4(0, 0, 0, 0);
-//scene.debugLayer.show();
+scene.debugLayer.show();
 const imgArray = [
   "/cadeira.png",
   "/mesa_central.png",
